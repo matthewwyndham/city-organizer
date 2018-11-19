@@ -2,7 +2,7 @@
 
 You are tasked with reading US Census data which contains the population for a 1000 cities, organizing the data by Region and State, and writing it out to a markdown file. 
 
-In order to get familiar with using Array methods, the only rule is that you are not allowed to use traditional `for` loops. And the more you use Array methods like [`.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) and [`.filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) instead of [`.forEach`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) the better.
+In order to get familiar with using Array methods, the only rule is that you are not allowed to use traditional `for` loops. The more you use Array methods like [`.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) and [`.filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) instead of [`.forEach`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) the better.
 
 There are some provided utility functions to read and parse the csv, to print and write JSON for debugging. But the final writing out to a markdown file is left to the creator for flexability. Here is some suggested code to give you an idea of how it could look like. But will strongly depend on how you have organized your data.
 
@@ -32,18 +32,20 @@ This will create a markdown file `output.md` that will look like what is shown b
 > ## New York
 > - New York, NY ( `pop. 8,622,698` )
 
-# Getting Started
+## Getting Started
 
-## Download this project
-- Open the terminal
-- Navigate to your Documents folder then run the following to clone the repository
+1. Open the terminal
+2. Navigate to your Documents folder then run the following to clone the repository
 ```
 git clone https://github.com/byuitechops/city-organizer.git
 cd city-organizer
 git remote rm origin
+npm i
 ```
-- Open the created folder in vscode
-- Install the Markdown Preview plugin in vscode to see how your output will be rendered
+3. Open the created folder in vscode
+4. Install the Markdown Preview plugin in vscode to see how your output will be rendered
+5. Write some awesome code
+5. Test your code by running `node main.js`
 
 ## The Challenge
 In `main.js` add the nessesary code to transform the flat csv data into the nested format that is shown below. Where cities of the same STATE are under their respective STATE and states of the same REGION are under their respective REGION
