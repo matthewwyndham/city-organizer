@@ -1,0 +1,17 @@
+{
+  "name": "CityOrganizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "d3-dsv": "^1.0.10",
+    "js-beautify": "^1.8.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
