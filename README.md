@@ -7,19 +7,19 @@ In order to get familiar with using Array methods, the only rule is that you are
 There are some provided utility functions to read and parse the csv, to print and write JSON for debugging. But the final writing out to a markdown file is left to the creator for flexability. Here is some suggested code to give you an idea of how it could look like. But will strongly depend on how you have organized your data.
 
 ``` js
-var file = fs.createWriteStream('output.md')
+var file = ""
 data.forEach(region => {
-  file.write(`# ${region.name}\n`) // Writing the Region Name
+  file += `# ${region.name}\n` // Writing the Region Name
   region.states.forEach(state => {
-    file.write(`## ${state.name}\n`) // Writing the State Name
+    file += `## ${state.name}\n` // Writing the State Name
     state.cities.forEach(city => {
       // Writing the City name with population
-      file.write(`- ${city.name} ( \`pop. ${city.population.toLocaleString()}\` )\n`)
+      file += `- ${city.name} ( \`pop. ${city.population.toLocaleString()}\` )\n`
     })
   })
-  file.write('\n')
+  file += '\n'
 })
-file.end()
+write('output.md',file)
 ```
 
 This will create a markdown file `output.md` that will look like what is shown below. Feel free to get creative with the formating to make it more to your liking, but this is the format that will be the one used throughout the doc.
