@@ -137,7 +137,7 @@ Either add code or change your existing code so that cities under a STATE are so
 ```
 
 
-### Sort Regions East to West
+### Sort Regions West to East
 Either add code or change your existing code so that the regions are in order of West to East. So they follow as `Pacific, Mountain, Midwest, South, Northeast`,
 
 ``` md
