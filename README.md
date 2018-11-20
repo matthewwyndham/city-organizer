@@ -39,7 +39,6 @@ This will create a markdown file `output.md` that will look like what is shown b
 ```
 git clone https://github.com/byuitechops/city-organizer.git
 cd city-organizer
-git remote rm origin
 npm i
 ```
 3. Open the created folder in vscode
