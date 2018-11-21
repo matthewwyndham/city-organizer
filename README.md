@@ -1,36 +1,42 @@
 # City Organizer
 
-You are tasked with reading US Census data which contains the population for a 1000 cities, organizing the data by Region and State, and writing it out to a markdown file. 
+You are tasked with converting a csv into a markdown file. Reading in US Census data which contains the population for a 1000 cities, grouping the data by Region and State.
 
 In order to get familiar with using Array methods, the only rule is that you are not allowed to use traditional `for` loops. The more you use Array methods like [`.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) and [`.filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) instead of [`.forEach`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) the better.
 
-There are some provided utility functions to read and parse the csv, to print and write JSON for debugging. But the final writing out to a markdown file is left to the creator for flexability. Here is some suggested code to give you an idea of how it could look like. But will strongly depend on how you have organized your data.
+## Utils
+You have a couple of utility functions provided for you
 
+#### read( `csvFileName` )
+Will read in and parse the given file. Returning something that looks like this
 ``` js
-var file = fs.createWriteStream('output.md')
-data.forEach(region => {
-  file.write(`# ${region.name}\n`) // Writing the Region Name
-  region.states.forEach(state => {
-    file.write(`## ${state.name}\n`) // Writing the State Name
-    state.cities.forEach(city => {
-      // Writing the City name with population
-      file.write(`- ${city.name} ( \`pop. ${city.population.toLocaleString()}\` )\n`)
-    })
-  })
-  file.write('\n')
-})
-file.end()
+[{ 
+    Region:"Northeast",
+    State:"New York",
+    City:"New York, NY",
+    Population:"8622698",
+}, ... ]
+```
+    
+#### write( `markdownFileName` , `regions` )
+Creates the markdown file at the specified location, expecting `regions`
+to be in a format like this:
+``` js
+[{
+  name: 'Northeast',
+  states:[{
+    name: 'New York',
+    cities:[{
+      name: 'New York, NY',
+      population: 8622698
+    }]
+  }]
+}]
 ```
 
-This will create a markdown file `output.md` that will look like what is shown below. Feel free to get creative with the formating to make it more to your liking, but this is the format that will be the one used throughout the doc.
-``` md
-# Northeast
-## New York
-- New York, NY ( `pop. 8,622,698` )
-```
-> # Northeast
-> ## New York
-> - New York, NY ( `pop. 8,622,698` )
+#### prettyprint( `{ Object }` )
+To help with debugging, will `console.log`
+an object after passing it through [`beautify`](https://www.npmjs.com/package/js-beautify)
 
 ## Getting Started
 
@@ -39,7 +45,6 @@ This will create a markdown file `output.md` that will look like what is shown b
 ```
 git clone https://github.com/byuitechops/city-organizer.git
 cd city-organizer
-git remote rm origin
 npm i
 ```
 3. Open the created folder in vscode
