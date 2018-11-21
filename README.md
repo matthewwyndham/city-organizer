@@ -54,8 +54,7 @@ npm i
 6. When you have successfully created the markdown file. Test your code by running `npm test`
 
 ## The Challenge
-In `main.js` add the nessesary code to transform the flat csv data into the nested format that is shown below. Where cities of the same STATE are under their respective STATE and states of the same REGION are under their respective REGION
-
+In `main.js` add the nessesary code to transform the flat csv data into the nested format that the `write` function is expecting. If everything goes good the `write` function should create a file that looks like this:
 ``` md
 # Midwest
 ## Illinois
