@@ -172,3 +172,6 @@ Either add code or change your existing code so that the regions are in order of
 ## Pennsylvania
 - Philadelphia, PA ( `pop. 1,580,863` )
 ```
+
+## Testing
+run `npm test` to test your code
