@@ -8,6 +8,8 @@
 !package.json
 !package-lock.json
 !cities.csv
+!all.csv
+!nonunique.csv
 !utils.js
 !.gitignore
 !test.js

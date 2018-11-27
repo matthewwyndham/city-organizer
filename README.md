@@ -2,6 +2,10 @@
 
 You are tasked with converting a csv into a markdown file. Reading in US Census data which contains the population for a 1000 cities, grouping the data by Region and State.
 
+##### Rules
+ - **Not allowed to use `for` loops.**
+ - **Avoid using the `foreach` method**
+
 In order to get familiar with using Array methods, the only rule is that you are not allowed to use traditional `for` loops. The more you use Array methods like [`.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce) and [`.filter`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) instead of [`.forEach`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) the better.
 
 ## Utils
@@ -51,9 +55,17 @@ npm i
 4. Install the Markdown Preview plugin in vscode to see how your output will be rendered
 5. Write some awesome code
 5. Run your code by running `node main.js` in the console
-6. When you have successfully created the markdown file. Test your code by running `npm test`
+6. To run the test cases install jest globaly with
+```
+npm install -g jest
+```
 
-## The Challenge
+## Challenge #1 Create
+
+**Testing:** run `jest create.test.js`
+
+**Outcome:** Be comfortable with using array methods to manipulate data into different formats
+
 In `main.js` add the nessesary code to transform the flat csv data into the nested format that the `write` function is expecting. If everything goes good the `write` function should create a file that looks like this:
 ``` md
 # Midwest
@@ -83,8 +95,13 @@ In `main.js` add the nessesary code to transform the flat csv data into the nest
 - Houston, TX ( `pop. 2,312,717` )
 ```
 
-## Further Sorting Challenges
-Complete as many as you can
+## Challenge #2 Sorting
+
+**Testing:** run `jest sort.test.js`
+
+**Outcome:** Become comfortable with using the `sort` function with multiple different data formats and targets
+
+Complete the following sorting challenges
 
 ### Sorting States Alphabetically
 Either add code or change your existing code so that states under a REGION are sorted alphabetically
@@ -141,7 +158,6 @@ Either add code or change your existing code so that cities under a STATE are so
 - Oxnard, CA ( `pop. 210,037` )
 ```
 
-
 ### Sort Regions West to East
 Either add code or change your existing code so that the regions are in order of West to East. So they follow as `Pacific, Mountain, Midwest, South, Northeast`,
 
@@ -173,5 +189,78 @@ Either add code or change your existing code so that the regions are in order of
 - Philadelphia, PA ( `pop. 1,580,863` )
 ```
 
-## Testing
-run `npm test` to test your code
+## Challenge #3 Unique City Names
+
+**Testing:** run `jest unique.test.js`
+
+**Outcome:** Become better at noticing your assumptions
+
+Use the `nonunique.csv` csv instead of `cities.csv`. The only thing that has changed is that city names no longer contain the state name acronym. So there are now 5 cities with the name `Springfield` all in different states. Just making sure that you are not relying on the state names to be unique.
+
+## Challenge #4 Writing
+
+**Testing:** run `jest write.test.js`
+
+**Outcome:** Become more comfortable with researching documentation
+
+Research how to use [fs.writeFileSync](https://nodejs.org/api/fs.html#fs_fs_writefilesync_file_data_options), [fs.readFileSync](https://nodejs.org/api/fs.html#fs_fs_readfilesync_path_options) and [d3.csvParse](https://github.com/d3/d3-dsv#csvParse) to read, write, and parse the CSV. You are not allowed to use the provided `utils` functions in this challenge. You will need to read the csv and write to the file on your own, with the `fs` and `d3-dsv` libraries.
+
+### Output
+Using the sorts from the previous challenge. Write out just the first 10 rows to the `output.md` file. That file will be checked that it matches this output exactly.
+``` md
+# Pacific
+## California
+- Los Angeles, CA `pop. 3999759`
+- San Diego, CA `pop. 1419516`
+- San Jose, CA `pop. 1035317`
+
+# Mountain
+## Arizona
+- Phoenix, AZ `pop. 1626078`
+
+# Midwest
+## Illinois
+- Chicago, IL `pop. 2716450`
+
+# South
+## Texas
+- Houston, TX `pop. 2312717`
+- San Antonio, TX `pop. 1511946`
+- Dallas, TX `pop. 1341075`
+
+# Northeast
+## New York
+- New York, NY `pop. 8622698`
+## Pennsylvania
+- Philadelphia, PA `pop. 1580863`
+```
+
+## Challenge #5 Summing
+
+**Testing:** run `jest sum.test.js`
+
+**Outcome:** Become better at designing code that has taken into account things that might need to be accessable in the future.
+
+Add the `population` property to Region and States, which contains the sum of the populations beneath them.
+``` js
+[{
+  name: 'Northeast',
+  population: 8622698
+  states:[{
+    name: 'New York',
+    population: 8622698
+    cities:[{
+      name: 'New York, NY',
+      population: 8622698
+    }]
+  }]
+}]
+```
+
+# Challenge #6 Optimization (just for fun)
+
+**Testing:** run `jest optimize.test.js`
+
+**Outcome:** Become more aware of the costs that come from a specific implementation
+
+Run your code against `all.csv` to see how long it takes. It contains almost 8,500 cities across america. 
