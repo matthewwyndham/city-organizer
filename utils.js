@@ -4,8 +4,11 @@ const d3 = require('d3-dsv')
 const beautify = require('js-beautify').js
 const expect = require('expect')
 
-module.exports.read = filename => d3.csvParse(fs.readFileSync(path.join(__dirname,filename),'utf-8'))
-module.exports.prettyprint = data => console.log(beautify(JSON.stringify(data)))
+module.exports.read = function(filename){
+  var fullpath = path.join(__dirname,filename)
+  expect(fs.existsSync(fullpath)).toBeTruthy()
+  return d3.csvParse(fs.readFileSync(fullpath,'utf-8'))
+}
 
 module.exports.write = function write(filename,regions){
   var file = fs.createWriteStream(path.join(__dirname,filename))
@@ -36,3 +39,5 @@ module.exports.write = function write(filename,regions){
   })
   file.end()
 }
+
+module.exports.prettyprint = data => console.log(beautify(JSON.stringify(data)))
