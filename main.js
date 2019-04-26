@@ -25,7 +25,8 @@ function regionReducer(reg, city) {
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
         reg.push({name: city['REGION'], states: []});
-        reg.sort((a,b) => a.name.localeCompare(b.name));
+        reg.sort((a,b) => a.name.localeCompare(b.name)); // TODO: west to east
+
         findRegion = reg.find(e => e.name === city['REGION']);
     }
 
@@ -34,7 +35,8 @@ function regionReducer(reg, city) {
     if (findStates === undefined) {
         // new state object (string:name, array:cities)
         findRegion.states.push({name: city['STATE'], cities: []});
-        findRegion.states.sort((a,b) => a.name.localeCompare(b.name));
+        findRegion.states.sort((a,b) => a.name.localeCompare(b.name)); // alphabetical
+
         findStates = findRegion.states.find(e => e.name === city['STATE']);
     }
  
@@ -43,7 +45,7 @@ function regionReducer(reg, city) {
     if (findCity === undefined) {
         // new city object (string:name, string:population)
         findStates.cities.push({name: city['CITY'], population: parseInt(city['POPULATION'])});
-        findStates.cities.sort((a,b) => a.name.localeCompare(b.name));
+        findStates.cities.sort((a,b) => a.population - b.population); // by population
     }
 
     return reg;
