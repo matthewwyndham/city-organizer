@@ -13,6 +13,9 @@ var csvData = read('cities.csv');
 // debug
 // console.log(csvData);
 
+// keep track of order of regions
+const regionOrder = ['Pacific', 'Mountain', 'Midwest', 'South', 'Northeast'];
+
 // Convert the csv of each city to a nice list organized by
 // region, state, then city
 var regions = csvData.reduce(regionReducer, []);
@@ -25,7 +28,7 @@ function regionReducer(reg, city) {
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
         reg.push({name: city['REGION'], states: []});
-        reg.sort((a,b) => a.name.localeCompare(b.name)); // TODO: west to east
+        reg.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)); // TODO: west to east
 
         findRegion = reg.find(e => e.name === city['REGION']);
     }
