@@ -50,11 +50,11 @@ function regionReducer(reg, city) {
 
 // debug
 console.log("\nData");
-console.log('Region', 'State', 'City', 'Population');
+console.log('Region'.padStart(10), 'State'.padStart(15), 'City'.padStart(20), 'Population'.padStart(15));
 for (let r of regions) {
     for (let s of r.states) {
         for (let c of s.cities) {
-            console.log(r.name, '\t', s.name, '\t', c.name, '\t', c.population);
+            console.log(r.name.padStart(10), s.name.padStart(15), c.name.padStart(20), c.population.padStart(15));
         }
     }
 }
