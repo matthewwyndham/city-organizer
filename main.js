@@ -6,7 +6,7 @@ const {
 
 
 // slicing down to just the first couple rows to make your life easier for now
-var csvData = read('cities.csv').slice(0, 10)
+var csvData = read('cities.csv');
 
 
 /* --- Your awesome code here --- */
@@ -25,6 +25,7 @@ function regionReducer(reg, city) {
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
         reg.push({name: city['REGION'], states: []});
+        reg.sort((a,b) => a.name.localeCompare(b.name));
         findRegion = reg.find(e => e.name === city['REGION']);
     }
 
@@ -33,6 +34,7 @@ function regionReducer(reg, city) {
     if (findStates === undefined) {
         // new state object (string:name, array:cities)
         findRegion.states.push({name: city['STATE'], cities: []});
+        findRegion.states.sort((a,b) => a.name.localeCompare(b.name));
         findStates = findRegion.states.find(e => e.name === city['STATE']);
     }
  
@@ -40,21 +42,22 @@ function regionReducer(reg, city) {
     var findCity = findStates.cities.find(e => e.name === city['CITY']);
     if (findCity === undefined) {
         // new city object (string:name, string:population)
-        findStates.cities.push({name: city['CITY'], population: city['POPULATION']});
+        findStates.cities.push({name: city['CITY'], population: parseInt(city['POPULATION'])});
+        findStates.cities.sort((a,b) => a.name.localeCompare(b.name));
     }
 
     return reg;
 }
 
-// write('regions.md', regions);
+write('/regions.md', regions);
 
 // debug
-console.log("\nData");
-console.log('Region'.padStart(10), 'State'.padStart(15), 'City'.padStart(20), 'Population'.padStart(15));
-for (let r of regions) {
-    for (let s of r.states) {
-        for (let c of s.cities) {
-            console.log(r.name.padStart(10), s.name.padStart(15), c.name.padStart(20), c.population.padStart(15));
-        }
-    }
-}
+// console.log("\nData");
+// console.log('Region'.padStart(10), 'State'.padStart(15), 'City'.padStart(20), 'Population'.padStart(15));
+// for (let r of regions) {
+//     for (let s of r.states) {
+//         for (let c of s.cities) {
+//             console.log(r.name.padStart(10), s.name.padStart(15), c.name.padStart(20), c.population.toString().padStart(15));
+//         }
+//     }
+// }
