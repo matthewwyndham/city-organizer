@@ -63,6 +63,7 @@ function regionReducer(reg, city) {
 
     return reg; // this is an object so this is a reference and not a copy
 }
+
 /* start of timing */
 /*-----------------*/
 t0 = performance.now(); // for timing how long this process runs
