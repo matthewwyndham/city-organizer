@@ -7,7 +7,7 @@ const d3v = require('d3-dsv');
 /******************/
 /* defualt values */
 /******************/
-var t0, t1, csvData, regions, outFile;
+var t0, t1, csvData, regions, outFile, prettyString;
 var filename = 'cities.csv';
 var debug = false;
 var countCities = 0;
@@ -64,6 +64,24 @@ function regionReducer(reg, city) {
     return reg; // this is an object so this is a reference and not a copy
 }
 
+function prettifyCity(prettyString, city) {
+    prettyString += "- " + city.name;
+    prettyString += " `pop. " + city.population + "`";
+    prettyString += '\n';
+    return prettyString;
+}
+
+function prettifyState(prettyString, state) {
+    prettyString += "## " + state.name + "\n";
+    return state.cities.reduce(prettifyCity, prettyString);
+}
+
+function prettifyRegion(prettyString, region) {
+    prettyString += "# " + region.name + "\n";
+    prettyString = region.states.reduce(prettifyState, prettyString) + "\n";
+    return prettyString;
+}
+
 /* start of timing */
 /*-----------------*/
 t0 = performance.now(); // for timing how long this process runs
@@ -105,6 +123,13 @@ outFile = 'regions-' + filename.substring(0, filename.length - 4) + '.md';
 console.log("Writing data to " + outFile + " ...");
 // write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
 
+console.log(regions); // object with nested objects, must be converted to string or buffer. no FOR loops!
+
+prettyString = regions.reduce(prettifyRegion, '');
+
+console.log(prettyString); // looks good, let's see what the markdown looks like
+
+fs.writeFileSync(outFile, prettyString);
 
 /* end of timing */
 /*---------------*/
