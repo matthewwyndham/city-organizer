@@ -4,16 +4,30 @@ const {
     prettyprint
 } = require('./utils')
 
+/* I changed this code to allow command line arguments, and to have dynamic filenames */
 
-// slicing down to just the first couple rows to make your life easier for now
-var csvData = read('cities.csv');
+var filename = 'cities.csv';
+var debug = false;
 
+// pass in a filename to process.argv
+if (!process.argv[2].includes(".csv")) {
+    console.log("No file specified, using 'cities.csv'");
+} 
+else {
+    filename = process.argv[2];
+}
+
+// debug mode
+if (process.argv[3] !== undefined) {debug = true;}
+
+console.log("Extracting data from " + filename + " ...");
+var csvData = read(filename);
 
 /* --- Your awesome code here --- */
 // debug
 // console.log(csvData);
 
-// keep track of order of regions
+// keep track of order of regions (west to east)
 const regionOrder = ['Pacific', 'Mountain', 'Midwest', 'South', 'Northeast'];
 
 // Convert the csv of each city to a nice list organized by
@@ -28,7 +42,11 @@ function regionReducer(reg, city) {
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
         reg.push({name: city['REGION'], states: []});
-        reg.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)); // TODO: west to east
+        reg.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)); // sorted by defined order
+
+        if (debug) {
+            console.log("adding region: " + city['REGION']);
+        }
 
         findRegion = reg.find(e => e.name === city['REGION']);
     }
@@ -40,6 +58,10 @@ function regionReducer(reg, city) {
         findRegion.states.push({name: city['STATE'], cities: []});
         findRegion.states.sort((a,b) => a.name.localeCompare(b.name)); // alphabetical
 
+        if (debug) {
+            console.log("adding state: " + city['STATE']);
+        }
+
         findStates = findRegion.states.find(e => e.name === city['STATE']);
     }
  
@@ -49,12 +71,17 @@ function regionReducer(reg, city) {
         // new city object (string:name, string:population)
         findStates.cities.push({name: city['CITY'], population: parseInt(city['POPULATION'])});
         findStates.cities.sort((a,b) => a.population - b.population); // by population
+
+        if (debug) {
+            console.log("adding city: " + city['CITY']);
+        }
     }
 
-    return reg;
+    return reg; // this is an object so this is a reference and not a copy
 }
 
-write('/regions.md', regions);
+// remove '.csv' from the name
+write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
 
 // debug
 // console.log("\nData");
