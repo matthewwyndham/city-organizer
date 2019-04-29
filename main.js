@@ -64,6 +64,12 @@ function regionReducer(reg, city) {
     return reg; // this is an object so this is a reference and not a copy
 }
 
+/****************************************/
+/* Convert JSON-like Object to Markdown */
+/****************************************/
+
+/* handle each city */
+/*------------------*/
 function prettifyCity(prettyString, city) {
     prettyString += "- " + city.name;
     prettyString += " `pop. " + city.population + "`";
@@ -71,16 +77,24 @@ function prettifyCity(prettyString, city) {
     return prettyString;
 }
 
+/* handle each state and all sub-cities */
+/*--------------------------------------*/
 function prettifyState(prettyString, state) {
     prettyString += "## " + state.name + "\n";
     return state.cities.reduce(prettifyCity, prettyString);
 }
 
+/* handle each region and all sub-states */
+/*---------------------------------------*/
 function prettifyRegion(prettyString, region) {
     prettyString += "# " + region.name + "\n";
     prettyString = region.states.reduce(prettifyState, prettyString) + "\n";
     return prettyString;
 }
+
+/*********/
+/* BEGIN */
+/*********/
 
 /* start of timing */
 /*-----------------*/
@@ -91,7 +105,7 @@ t0 = performance.now(); // for timing how long this process runs
 /**********************************/
 // command line syntax: second argument will specify file to read
 if (process.argv[2] === undefined || !process.argv[2].includes(".csv")) {
-    console.log("No file specified, using", filename);
+    if (debug) {console.log("No file specified, using", filename, "\n");}
 } 
 else {
     filename = process.argv[2];
@@ -103,14 +117,14 @@ if (process.argv[3] !== undefined) {debug = true;}
 /*************/
 /* read file */
 /*************/
-console.log("Extracting data from " + filename + " ...");
+if (debug) {console.log("Extracting data from " + filename + " ...");}
 csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')).slice(0, 10); // just the first few cities for now
 
 /**************/
 /* parse file */
 /**************/
 /* convert the csv to a nice format that is easy to print as markdown */
-console.log("Creating object that groups cities by state and region ...")
+if (debug) {console.log("Creating object that groups cities by state and region ...");}
 regions = csvData.reduce(regionReducer, []);
 
 if (debug) {console.log("\ntotal cities:", countCities);}
@@ -120,18 +134,14 @@ if (debug) {console.log("\ntotal cities:", countCities);}
 /******************/
 // substring to remove '.csv' from the name
 outFile = 'regions-' + filename.substring(0, filename.length - 4) + '.md';
-console.log("Writing data to " + outFile + " ...");
-// write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
 
-console.log(regions); // object with nested objects, must be converted to string or buffer. no FOR loops!
-
+if (debug) {console.log("Converting data to Markdown string");}
 prettyString = regions.reduce(prettifyRegion, '');
 
-console.log(prettyString); // looks good, let's see what the markdown looks like
-
+if (debug) {console.log("Writing data to " + outFile + " ...");}
 fs.writeFileSync(outFile, prettyString);
 
 /* end of timing */
 /*---------------*/
 t1 = performance.now();
-console.log(`runtime: ${((t1-t0) / 1000).toFixed(5)} sec`);
+console.log(`  (runtime: ${((t1-t0) / 1000).toFixed(5)} sec)`);
