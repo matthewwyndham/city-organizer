@@ -1,19 +1,15 @@
 const { write } = require('./utils')
 
-const { performance } = require('perf_hooks');
+// const { performance } = require('perf_hooks');
 const fs = require('fs');
 const d3v = require('d3-dsv');
 
-/******************/
 /* defualt values */
-/******************/
 var t0, t1, csvData, regions, outFile, prettyString;
 var filename = 'cities.csv';
 const regionOrder = ['Pacific', 'Mountain', 'Midwest', 'South', 'Northeast']; // keep track of order of regions (west to east) 
 
-/*********************************************/
 /* city-csv-style to region-md-style reducer */
-/*********************************************/
 function regionReducer(reg, city) {
     // reg is 'region', meaning the collection of cities organized into groups in states, in regions
     
@@ -70,21 +66,19 @@ function prettifyRegion(prettyString, region) {
 }
 
 /* BEGIN */
-t0 = performance.now(); /* start of timing */
+// t0 = performance.now(); /* start of timing */
 
 // command line syntax: second argument will specify file to read
 if (process.argv[2] !== undefined && process.argv[2].includes(".csv")) {filename = process.argv[2];}
 
 // read file
-csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')).slice(0, 15);
+csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8'));
 
 // convert the csv to a nice format that is easy to print as markdown
 regions = csvData.reduce(regionReducer, []);
 
 // sorting once after adding everything
-regions.sort((a,b) => {
-    regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)
-});
+regions.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name));
 
 regions = regions.map(function(e) {    
     e.states.sort((a,b) => a.name.localeCompare(b.name));
@@ -109,5 +103,5 @@ outFile = 'regions-' + filename.substring(0, filename.length - 4) + '.md';
 prettyString = regions.reduce(prettifyRegion, '');
 fs.writeFileSync(outFile, prettyString);
 
-t1 = performance.now(); /* end of timing */
-console.log(`  (runtime: ${((t1-t0) / 1000).toFixed(5)} sec)`);
+// t1 = performance.now(); /* end of timing */
+// console.log(`  (runtime: ${((t1-t0) / 1000).toFixed(5)} sec)`);
