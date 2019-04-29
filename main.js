@@ -22,7 +22,6 @@ function regionReducer(reg, city) {
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
         reg.push({name: city['REGION'], population: 0, states: []});
-        reg.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)); // sorted by globally defined order
 
         // make sure the state is searching the right region
         findRegion = reg.find(e => e.name === city['REGION']);
@@ -33,7 +32,6 @@ function regionReducer(reg, city) {
     if (findStates === undefined) {
         // new state object (string:name, array:cities)
         findRegion.states.push({name: city['STATE'], population: 0, cities: []});
-        findRegion.states.sort((a,b) => a.name.localeCompare(b.name)); // alphabetical by name
 
         // make sure the city is searching the right state and region
         findStates = findRegion.states.find(e => e.name === city['STATE']);
@@ -44,7 +42,6 @@ function regionReducer(reg, city) {
     if (findCity === undefined) {
         // new city object (string:name, string:population)
         findStates.cities.push({name: city['CITY'], population: parseInt(city['POPULATION'])});
-        findStates.cities.sort((a,b) => a.population - b.population); // by population
     } // ignore duplicate cities (if the region, state, and city name are the same then *IGNORED*);
     
     return reg; // this is an object so this is a reference and not a copy
@@ -79,10 +76,24 @@ t0 = performance.now(); /* start of timing */
 if (process.argv[2] !== undefined && process.argv[2].includes(".csv")) {filename = process.argv[2];}
 
 // read file
-csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8'));
+csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')).slice(0, 15);
 
 // convert the csv to a nice format that is easy to print as markdown
 regions = csvData.reduce(regionReducer, []);
+
+// sorting once after adding everything
+regions.sort((a,b) => {
+    regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)
+});
+
+regions = regions.map(function(e) {    
+    e.states.sort((a,b) => a.name.localeCompare(b.name));
+    e.states = e.states.map(function (s) {
+        s.cities.sort((a,b) => a.population - b.population);
+        return s;
+    })
+    return e;
+});
 
 regions = regions.map(r => {
     r.states = r.states.map(s => { // add state population
