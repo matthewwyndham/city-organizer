@@ -1,5 +1,3 @@
-const { write } = require('./utils')
-
 // const { performance } = require('perf_hooks');
 const fs = require('fs');
 const d3v = require('d3-dsv');
