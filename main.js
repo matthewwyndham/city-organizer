@@ -1,13 +1,13 @@
 const { write } = require('./utils')
 
-const performance = require('perf_hooks');
+const { performance } = require('perf_hooks');
 const fs = require('fs');
 const d3v = require('d3-dsv');
 
 /******************/
 /* defualt values */
 /******************/
-var t0, t1, csvData, regions;
+var t0, t1, csvData, regions, outFile;
 var filename = 'cities.csv';
 var debug = false;
 var countCities = 0;
@@ -88,7 +88,6 @@ if (process.argv[3] !== undefined) {debug = true;}
 console.log("Extracting data from " + filename + " ...");
 csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')).slice(0, 10); // just the first few cities for now
 
-
 /**************/
 /* parse file */
 /**************/
@@ -102,10 +101,12 @@ if (debug) {console.log("\ntotal cities:", countCities);}
 /* write new file */
 /******************/
 // substring to remove '.csv' from the name
-console.log("Writing data to regions-" + filename.substring(0, filename.length - 4) + ".md ...");
-write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
+outFile = 'regions-' + filename.substring(0, filename.length - 4) + '.md';
+console.log("Writing data to " + outFile + " ...");
+// write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
+
 
 /* end of timing */
 /*---------------*/
 t1 = performance.now();
-console.log(`runtime: ${((t1-t0) / 1000).toPrecision(4)} sec`);
+console.log(`runtime: ${((t1-t0) / 1000).toFixed(5)} sec`);
