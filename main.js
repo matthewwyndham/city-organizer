@@ -23,7 +23,7 @@ function regionReducer(reg, city) {
     var findRegion = reg.find(e => e.name === city['REGION']);
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
-        reg.push({name: city['REGION'], states: []});
+        reg.push({name: city['REGION'], population: 0, states: []});
         reg.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)); // sorted by globally defined order
 
         if (debug) {process.stdout.write("[R]");}
@@ -36,7 +36,7 @@ function regionReducer(reg, city) {
     var findStates = findRegion.states.find(e => e.name === city['STATE']);
     if (findStates === undefined) {
         // new state object (string:name, array:cities)
-        findRegion.states.push({name: city['STATE'], cities: []});
+        findRegion.states.push({name: city['STATE'], population: 0, cities: []});
         findRegion.states.sort((a,b) => a.name.localeCompare(b.name)); // alphabetical by name
 
         if (debug) {process.stdout.write("S");}
@@ -72,22 +72,23 @@ function regionReducer(reg, city) {
 /*------------------*/
 function prettifyCity(prettyString, city) {
     prettyString += "- " + city.name;
-    prettyString += " `pop. " + city.population + "`";
-    prettyString += '\n';
+    prettyString += " `pop. " + city.population + "`\n";
     return prettyString;
 }
 
 /* handle each state and all sub-cities */
 /*--------------------------------------*/
 function prettifyState(prettyString, state) {
-    prettyString += "## " + state.name + "\n";
+    prettyString += "## " + state.name;
+    prettyString += " `pop. " + state.population + "`\n";
     return state.cities.reduce(prettifyCity, prettyString);
 }
 
 /* handle each region and all sub-states */
 /*---------------------------------------*/
 function prettifyRegion(prettyString, region) {
-    prettyString += "# " + region.name + "\n";
+    prettyString += "# " + region.name;
+    prettyString += " `pop. " + region.population + "`\n";
     prettyString = region.states.reduce(prettifyState, prettyString) + "\n";
     return prettyString;
 }
@@ -118,7 +119,7 @@ if (process.argv[3] !== undefined) {debug = true;}
 /* read file */
 /*************/
 if (debug) {console.log("Extracting data from " + filename + " ...");}
-csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')).slice(0, 10); // just the first few cities for now
+csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')); // just the first few cities for now
 
 /**************/
 /* parse file */
@@ -128,6 +129,17 @@ if (debug) {console.log("Creating object that groups cities by state and region 
 regions = csvData.reduce(regionReducer, []);
 
 if (debug) {console.log("\ntotal cities:", countCities);}
+if (debug) {console.log("Adding population to everything ...");}
+
+// add population to regions and states
+regions = regions.map(r => {
+    r.states = r.states.map(s => {
+        s.population = s.cities.reduce((p, c) => p + c.population, 0);
+        return s;
+    });
+    r.population = r.states.reduce((p, s) => p + s.population, 0);
+    return r;
+});
 
 /******************/
 /* write new file */
