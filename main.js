@@ -3,6 +3,10 @@ const {
     write,
     prettyprint
 } = require('./utils')
+const { performance } = require('perf_hooks');
+var t0, t1;
+
+t0 = performance.now();
 
 /* I changed this code to allow command line arguments, and to have dynamic filenames */
 // command line syntax: specify file to read as second, add a third arugment to print debugs
@@ -88,13 +92,19 @@ function regionReducer(reg, city) {
 }
 
 if (debug) {
-    console.log(" total cities: ", countCities);
+    console.log("\ntotal cities:", countCities);
 }
 
 console.log("Writing data to regions-" + filename.substring(0, filename.length - 4) + ".md ...");
 
 // remove '.csv' from the name
 write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
+
+t1 = performance.now();
+
+if (debug) {
+    console.log(`runtime: ${((t1-t0) / 1000).toPrecision(4)} sec`);
+}
 
 // debug
 // console.log("\nData");
