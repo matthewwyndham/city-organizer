@@ -5,12 +5,13 @@ const {
 } = require('./utils')
 
 /* I changed this code to allow command line arguments, and to have dynamic filenames */
+// command line syntax: specify file to read as second, add a third arugment to print debugs
 
 var filename = 'cities.csv';
 var debug = false;
 
 // pass in a filename to process.argv
-if (!process.argv[2].includes(".csv")) {
+if (process.argv[2] === undefined || !process.argv[2].includes(".csv")) {
     console.log("No file specified, using 'cities.csv'");
 } 
 else {
@@ -26,6 +27,10 @@ var csvData = read(filename);
 /* --- Your awesome code here --- */
 // debug
 // console.log(csvData);
+
+console.log("Creating object that groups cities by state and region ...")
+
+var countCities = 0;
 
 // keep track of order of regions (west to east)
 const regionOrder = ['Pacific', 'Mountain', 'Midwest', 'South', 'Northeast'];
@@ -45,7 +50,7 @@ function regionReducer(reg, city) {
         reg.sort((a,b) => regionOrder.findIndex(e => e === a.name) - regionOrder.findIndex(e => e === b.name)); // sorted by defined order
 
         if (debug) {
-            console.log("adding region: " + city['REGION']);
+            process.stdout.write("[R]");
         }
 
         findRegion = reg.find(e => e.name === city['REGION']);
@@ -59,7 +64,7 @@ function regionReducer(reg, city) {
         findRegion.states.sort((a,b) => a.name.localeCompare(b.name)); // alphabetical
 
         if (debug) {
-            console.log("adding state: " + city['STATE']);
+            process.stdout.write("S");
         }
 
         findStates = findRegion.states.find(e => e.name === city['STATE']);
@@ -73,12 +78,20 @@ function regionReducer(reg, city) {
         findStates.cities.sort((a,b) => a.population - b.population); // by population
 
         if (debug) {
-            console.log("adding city: " + city['CITY']);
+            // progress bar (basically)
+            process.stdout.write(":");
+            countCities = countCities + 1;
         }
     }
 
     return reg; // this is an object so this is a reference and not a copy
 }
+
+if (debug) {
+    console.log(" total cities: ", countCities);
+}
+
+console.log("Writing data to regions-" + filename.substring(0, filename.length - 4) + ".md ...");
 
 // remove '.csv' from the name
 write('regions-' + filename.substring(0, filename.length - 4) + '.md', regions);
