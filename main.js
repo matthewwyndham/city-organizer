@@ -18,13 +18,14 @@ var debug = false;
 var countCities = 0;
 const regionOrder = ['Pacific', 'Mountain', 'Midwest', 'South', 'Northeast']; // keep track of order of regions (west to east) 
 
-/**********************************/
-/* city-csv to region-md reducer! */
-/**********************************/
+/*********************************************/
+/* city-csv-style to region-md-style reducer */
+/*********************************************/
 function regionReducer(reg, city) {
     // reg is 'region', meaning the collection of cities organized into groups in states, in regions
-    var findRegion = reg.find(e => e.name === city['REGION']);
+    
     // check if region does not exist
+    var findRegion = reg.find(e => e.name === city['REGION']);
     if (findRegion === undefined) {
         // new region object (string:name, array:states)
         reg.push({name: city['REGION'], states: []});
@@ -32,6 +33,7 @@ function regionReducer(reg, city) {
 
         if (debug) {process.stdout.write("[R]");}
 
+        // make sure the state is searching the right region
         findRegion = reg.find(e => e.name === city['REGION']);
     }
 
@@ -44,6 +46,7 @@ function regionReducer(reg, city) {
 
         if (debug) {process.stdout.write("S");}
 
+        // make sure the city is searching the right state and region
         findStates = findRegion.states.find(e => e.name === city['STATE']);
     }
  
@@ -59,7 +62,9 @@ function regionReducer(reg, city) {
             process.stdout.write(":");
             countCities = countCities + 1;
         }
-    }
+    } 
+    
+    // ignore duplicate cities (if the region, state, and city name are the same then *IGNORED*);
 
     return reg; // this is an object so this is a reference and not a copy
 }
