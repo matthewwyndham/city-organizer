@@ -1,13 +1,8 @@
-const {
-    read,
-    write,
-    prettyprint
-} = require('./utils')
-const { performance } = require('perf_hooks');
+const { write } = require('./utils')
 
+const performance = require('perf_hooks');
 const fs = require('fs');
 const d3v = require('d3-dsv');
-const path = require('path');
 
 /******************/
 /* defualt values */
@@ -91,7 +86,8 @@ if (process.argv[3] !== undefined) {debug = true;}
 /* read file */
 /*************/
 console.log("Extracting data from " + filename + " ...");
-csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8'));
+csvData = d3v.csvParse(fs.readFileSync(filename, 'utf8')).slice(0, 10); // just the first few cities for now
+
 
 /**************/
 /* parse file */
